@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kurerefinancialplanner_app/screens/home_screen.dart';
+import 'package:kurerefinancialplanner_app/components/entry_point.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -94,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
+                          builder: (context) => const EntryPoint(),
                         ),
                       );
                     },

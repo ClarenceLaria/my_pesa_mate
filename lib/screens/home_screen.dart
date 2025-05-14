@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 16,
                             ),
                           ),
-                          SizedBox(height: 10,),
                           Text(
                             'KSh. 320,000',
                             style: TextStyle(
@@ -52,11 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Divider(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Expenses',
@@ -68,16 +67,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 10,
                                   ),
                                   Text(
-                                    'Balance',
+                                    'KSh. 100,000',
                                     style: TextStyle(
                                       fontSize: 16,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10,),
                               Text(
-                                'KSh. 100,000',
+                                'Balance',
                                 style: TextStyle(
                                   fontSize: 16,
                                 ),
