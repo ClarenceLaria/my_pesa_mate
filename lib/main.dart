@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF9F9F9),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: const LoginScreen(),
     );
   }
