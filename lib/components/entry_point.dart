@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/screens/add_screen.dart';
 import 'package:kurerefinancialplanner_app/screens/home_screen.dart';
 
 class EntryPoint extends StatefulWidget {
@@ -13,7 +14,7 @@ class _EntryPointState extends State<EntryPoint> {
 
   final List<Widget> screens = [
     const HomeScreen(),
-    const Center(child: Text('Add'),),
+    const AddTransactionScreen(),
     const Center(child: Text('Budget'),),
     const Center(child: Text('Tips'),),
   ];
