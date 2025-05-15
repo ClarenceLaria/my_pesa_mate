@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kurerefinancialplanner_app/screens/add_screen.dart';
 import 'package:kurerefinancialplanner_app/screens/create_budget_screen.dart';
+import 'package:kurerefinancialplanner_app/screens/financial_tips_screen.dart';
 import 'package:kurerefinancialplanner_app/screens/home_screen.dart';
 
 class EntryPoint extends StatefulWidget {
@@ -17,7 +18,7 @@ class _EntryPointState extends State<EntryPoint> {
     const HomeScreen(),
     const AddTransactionScreen(),
     const CreateBudgetScreen(),
-    const Center(child: Text('Tips'),),
+    FinancialTipsScreen(),
   ];
   @override
   Widget build(BuildContext context) {
