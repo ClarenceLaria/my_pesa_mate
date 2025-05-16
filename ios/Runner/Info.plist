@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Face ID/Touch ID usage description -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>This app uses Face ID to authenticate the user and secure their financial data.</string>
 </dict>
 </plist>

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kurerefinancialplanner_app/components/entry_point.dart';
+import 'package:kurerefinancialplanner_app/components/pin_card.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -40,28 +41,29 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 32),
-                Container(
-                  width: 100,
-                  height: 125,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                        color: Colors.black.withOpacity(0.05),
-                      )
-                    ],
-                  ),
-                  child: GridView.count(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    children: List.generate(4, (_) => _buildDot()),
-                  ),
-                ),
+                const PinCard(),
+                // Container(
+                //   width: 100,
+                //   height: 125,
+                //   padding: const EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(20),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         blurRadius: 15,
+                //         offset: const Offset(0, 5),
+                //         color: Colors.black.withOpacity(0.05),
+                //       )
+                //     ],
+                //   ),
+                //   child: GridView.count(
+                //     padding: const EdgeInsets.symmetric(vertical: 10),
+                //     crossAxisCount: 2,
+                //     mainAxisSpacing: 10,
+                //     children: List.generate(4, (_) => _buildDot()),
+                //   ),
+                // ),
                 const SizedBox(height: 32),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
