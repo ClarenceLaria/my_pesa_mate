@@ -39,7 +39,7 @@ class _EntryPointState extends State<EntryPoint> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add_circle),
             label: 'Add',
           ),
           BottomNavigationBarItem(
