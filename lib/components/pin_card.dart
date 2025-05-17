@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/auth/pin_storage.dart';
 import 'package:kurerefinancialplanner_app/components/entry_point.dart';
 
 class PinCard extends StatefulWidget {
@@ -11,6 +12,21 @@ class PinCard extends StatefulWidget {
 class _PinCardState extends State<PinCard> {
   final List<String> _pin = [];
   bool _showKeypad = false;
+  final PinService _pinService = PinService();
+  bool _isVerifying = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfPinExists();
+  }
+
+  Future<void> _checkIfPinExists() async {
+    final exists = await _pinService.isPinSet();
+    setState(() {
+      _isVerifying = exists;
+    });
+  }
 
   void _addDigit(String digit) {
     if (_pin.length < 4) {
@@ -28,11 +44,39 @@ class _PinCardState extends State<PinCard> {
     }
   }
 
-  void _onPinEntered(String pin) {
-    debugPrint('Entered PIN: $pin');
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const EntryPoint()),
+  Future<void> _onPinEntered(String pin) async {
+    if (_isVerifying) {
+      // Validate
+      final isValid = await _pinService.validatePin(pin);
+      if (isValid) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const EntryPoint()),
+        );
+      } else {
+        _showError('Incorrect PIN');
+        setState(() => _pin.clear());
+      }
+    } else {
+      // Save new PIN
+      await _pinService.savePin(pin);
+      _showSuccess('PIN saved');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const EntryPoint()),
+      );
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating,),
+    );
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating,),
     );
   }
 
@@ -97,6 +141,11 @@ class _PinCardState extends State<PinCard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text(
+          _isVerifying ? 'Enter PIN' : 'Set a New PIN: $_pin',
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
         GestureDetector(
           onTap: () {
             setState(() {
