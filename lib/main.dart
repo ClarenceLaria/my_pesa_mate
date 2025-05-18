@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:face_camera/face_camera.dart';
 import 'package:kurerefinancialplanner_app/screens/login_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await FaceCamera.initialize();
   runApp(const MyApp());
 }
 

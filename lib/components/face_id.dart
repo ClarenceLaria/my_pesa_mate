@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kurerefinancialplanner_app/components/entry_point.dart';
+import 'package:kurerefinancialplanner_app/components/face_preview.dart';
 
 class FaceId extends StatefulWidget {
   const FaceId({super.key});
@@ -49,7 +50,8 @@ class _FaceIdState extends State<FaceId> {
                         const Icon(Icons.face, size: 80, color: Colors.green),
                         const SizedBox(height: 16),
                         const Text('Face ID Authentication',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 12),
                         const Text('Tap below to start scanning your face.'),
                         const SizedBox(height: 24),
@@ -57,10 +59,13 @@ class _FaceIdState extends State<FaceId> {
                           onPressed: startScan,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
                           ),
-                          child: const Text('Start Scan', style: TextStyle(color: Colors.white)),
+                          child: const Text('Start Scan',
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ],
                       if (scanState == 'scanning') ...[
@@ -68,14 +73,16 @@ class _FaceIdState extends State<FaceId> {
                             size: 80, color: Colors.greenAccent),
                         const SizedBox(height: 16),
                         const Text('Scanning your face...',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500)),
                         const SizedBox(height: 12),
                         const Text(
                           'Please hold your device steady and look into the camera.',
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
-                        const CircularProgressIndicator(),
+                        // const CircularProgressIndicator(),
+                        FacePreview(setSheetState: setSheetState)
                       ],
                       if (scanState == 'done') ...[
                         Icon(
@@ -86,7 +93,8 @@ class _FaceIdState extends State<FaceId> {
                         const SizedBox(height: 16),
                         Text(
                           success ? 'Identity Verified' : 'Face Not Recognized',
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -102,16 +110,20 @@ class _FaceIdState extends State<FaceId> {
                               Navigator.pop(context);
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const EntryPoint()),
+                                MaterialPageRoute(
+                                    builder: (context) => const EntryPoint()),
                               );
                             } else {
                               setSheetState(() => scanState = 'start');
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: success ? Colors.green : Colors.red,
-                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            backgroundColor:
+                                success ? Colors.green : Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
                           ),
                           child: Text(
                             success ? 'Continue' : 'Try Again',
