@@ -42,7 +42,7 @@ class _FaceIdState extends State<FaceId> {
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: SizedBox(
-                  height: 350,
+                  height: 450,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
