@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/components/face_id.dart';
 
 class BiometricsModal extends StatefulWidget {
   const BiometricsModal({super.key});
@@ -80,18 +81,7 @@ class _BiometricsModalState extends State<BiometricsModal> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            _showBiometricPrompt(context, isFace: true);
-          },
-          child: const Column(
-            children: [
-              Icon(Icons.face, size: 60),
-              SizedBox(height: 5),
-              Text('Face Scan', style: TextStyle(fontSize: 12)),
-            ],
-          ),
-        ),
+        const FaceId(),
 
       ],
     );
