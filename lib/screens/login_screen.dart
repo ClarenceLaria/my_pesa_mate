@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/components/biometrics_modal.dart';
 import 'package:kurerefinancialplanner_app/components/entry_point.dart';
 import 'package:kurerefinancialplanner_app/components/pin_card.dart';
 
@@ -40,53 +41,19 @@ class LoginScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
+                // Pin Card
                 const SizedBox(height: 32),
                 const PinCard(),
-                // Container(
-                //   width: 100,
-                //   height: 125,
-                //   padding: const EdgeInsets.all(16),
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(20),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         blurRadius: 15,
-                //         offset: const Offset(0, 5),
-                //         color: Colors.black.withOpacity(0.05),
-                //       )
-                //     ],
-                //   ),
-                //   child: GridView.count(
-                //     padding: const EdgeInsets.symmetric(vertical: 10),
-                //     crossAxisCount: 2,
-                //     mainAxisSpacing: 10,
-                //     children: List.generate(4, (_) => _buildDot()),
-                //   ),
-                // ),
+
+                //Biometrics
                 const SizedBox(height: 32),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Icon(Icons.fingerprint, size: 60),
-                        SizedBox(height: 5),
-                        Text('Fingerprint Scanner', style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.face, size: 60),
-                        SizedBox(height: 5),
-                        Text('Face Scan', style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  ],
-                ),
+                const BiometricsModal(),
+
                 const SizedBox(height: 40),
                 const Spacer(),
                 
+                // navigation buttons
                 const SizedBox(height: 40),
                 SizedBox(
                   width: double.infinity,
