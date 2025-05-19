@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/auth/auth_helper.dart';
 import 'package:kurerefinancialplanner_app/components/entry_point.dart';
 import 'package:kurerefinancialplanner_app/components/face_preview.dart';
 
@@ -10,9 +11,43 @@ class FaceId extends StatefulWidget {
 }
 
 class _FaceIdState extends State<FaceId> {
+
+  final LocalAuthService _localAuthService = LocalAuthService();
+
   String scanState = 'start';
   bool success = true;
 
+   Future<void> _authenticate(BuildContext context, StateSetter setSheetState) async {
+    try{
+      setSheetState(() => scanState = 'scanning');
+
+      bool isAuthenticated = await _localAuthService.authenticateWithBiometrics();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isAuthenticated ? 'Authentication successful' : 'Authentication failed'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: isAuthenticated ? Colors.green : Colors.red,
+        ),
+      );
+      setSheetState(() {
+        scanState = 'done';
+        success = isAuthenticated;
+      });
+    }catch (e){
+      setSheetState(() {
+        scanState = 'done';
+        success = false;
+      });
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Authentication failed'),
+      //     behavior: SnackBarBehavior.floating,
+      //     backgroundColor: Colors.red,
+      //   ),
+      // );
+    }
+   }
   void _showFaceScanDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -24,19 +59,6 @@ class _FaceIdState extends State<FaceId> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            void startScan() async {
-              setSheetState(() => scanState = 'scanning');
-
-              await Future.delayed(const Duration(seconds: 3));
-
-              bool isSuccess = DateTime.now().second % 2 == 0;
-
-              setSheetState(() {
-                success = isSuccess;
-                scanState = 'done';
-              });
-            }
-
             return SizedBox(
               width: double.infinity,
               child: Padding(
@@ -56,7 +78,7 @@ class _FaceIdState extends State<FaceId> {
                         const Text('Tap below to start scanning your face.'),
                         const SizedBox(height: 24),
                         ElevatedButton(
-                          onPressed: startScan,
+                          onPressed: () => _authenticate(context, setSheetState),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(
