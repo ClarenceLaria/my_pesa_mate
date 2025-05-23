@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kurerefinancialplanner_app/apis/apis.dart';
 import 'package:kurerefinancialplanner_app/components/transactions_card.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -16,11 +17,31 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   TextEditingController amountController = TextEditingController();
 
   final List<Transaction> transactions = [
-    Transaction(category: 'Salary', amount: 100000, date: DateTime.now(), type: 'Income'),
-    Transaction(category: 'Groceries', amount: 15000, date: DateTime.now().subtract(Duration(days: 1)), type: 'Expense'),
-    Transaction(category: 'Electricity Bill', amount: 10000, date: DateTime.now().subtract(Duration(days: 2)), type: 'Expense'),
-    Transaction(category: 'Freelance Project', amount: 25000, date: DateTime.now().subtract(Duration(days: 3)), type: 'Income'),
-    Transaction(category: 'Transport', amount: 5000, date: DateTime.now().subtract(Duration(days: 4)), type: 'Expense'),
+    Transaction(
+        category: 'Salary',
+        amount: 100000,
+        date: DateTime.now(),
+        type: 'Income'),
+    Transaction(
+        category: 'Groceries',
+        amount: 15000,
+        date: DateTime.now().subtract(const Duration(days: 1)),
+        type: 'Expense'),
+    Transaction(
+        category: 'Electricity Bill',
+        amount: 10000,
+        date: DateTime.now().subtract(const Duration(days: 2)),
+        type: 'Expense'),
+    Transaction(
+        category: 'Freelance Project',
+        amount: 25000,
+        date: DateTime.now().subtract(const Duration(days: 3)),
+        type: 'Income'),
+    Transaction(
+        category: 'Transport',
+        amount: 5000,
+        date: DateTime.now().subtract(const Duration(days: 4)),
+        type: 'Expense'),
   ];
 
   Future<void> _pickDate() async {
@@ -93,7 +114,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     showModalBottomSheet(
                       context: context,
                       builder: (_) => ListView(
-                        children: ['Food', 'Transport', 'Rent', 'Health']
+                        children: [
+                          'Salary',
+                          'Capital Gains',
+                          'Food',
+                          'Transport',
+                          'Rent',
+                          'Health'
+                        ]
                             .map((e) => ListTile(
                                   title: Text(e),
                                   onTap: () {
@@ -120,8 +148,41 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   width: double.infinity,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Save logic here
+                      try {
+                        final result = await APIService.createTransaction(
+                          type: selectedType.toUpperCase(),
+                          category: selectedCategory,
+                          amount: amountController.text.isNotEmpty
+                              ? double.parse(amountController.text)
+                              : 0.0,
+                          date: selectedDate,
+                        );
+                        if (result == 'Transaction created successfully') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Transaction added successfully'),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Failed to add transaction'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.red),
+                          );
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Failed to add transaction'),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.red),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.greenAccent,
