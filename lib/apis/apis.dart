@@ -34,4 +34,36 @@ class APIService {
       return 'Failed to create transaction';
     }
   }
+  
+  static Future<String> createBudget ({
+    required String name,
+    required String amount,
+    required String startDate,
+    required String endDate,
+    required String userId,
+  })async{
+    try{
+      final response = await http.post(
+        Uri.parse('${baseUrl}create-budget'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': name,
+          'amount': amount,
+          'startDate': startDate,
+          'endDate': endDate,
+          'userId': userId,
+        }),
+      );
+
+      if(response.statusCode == 201){
+        return 'Budget created successfully';
+      } else {
+        throw Exception('Failed to create budget');
+      }
+    }catch(e){
+      return 'Failed to create transaction';
+    }
+  }
 }
