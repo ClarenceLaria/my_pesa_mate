@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:kurerefinancialplanner_app/apis/apis.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_event.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_state.dart';
 import 'package:kurerefinancialplanner_app/components/transactions_card.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -147,53 +150,51 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      // Save logic here
-                      try {
-                        final result = await APIService.createTransaction(
-                          type: selectedType.toUpperCase(),
-                          category: selectedCategory,
-                          amount: amountController.text.isNotEmpty
-                              ? double.parse(amountController.text)
-                              : 0.0,
-                          date: selectedDate,
-                        );
-                        if (result == 'Transaction created successfully') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Transaction added successfully'),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Failed to add transaction'),
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.red),
-                          );
-                        }
-                      } catch (e) {
+                  child: BlocConsumer<AddTransactionBloc, AddTransactionState>(
+                    listener: (context, state) {
+                      if(state is AddTransactionSuccessState){
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Failed to add transaction'),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.red),
+                          SnackBar(
+                            content: Text(state.message),
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      } else if (state is AddTransactionFailureState){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.error),
+                            backgroundColor: Colors.red,
+                            behavior: SnackBarBehavior.floating,
+                          ),
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                    builder: (context, state) {
+                      return ElevatedButton(
+                        onPressed: state is AddTransactionLoadingState
+                          ? null : (){
+                            context.read<AddTransactionBloc>().add(
+                              CreateTransactionEvent(
+                                type: selectedType, 
+                                amount: double.tryParse(amountController.text) ?? 0.0, 
+                                category: selectedCategory, 
+                                txnDate: selectedDate,
+                              ),
+                            );
+                          },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.greenAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      );
+                    }, 
                   ),
                 ),
                 const SizedBox(height: 16),

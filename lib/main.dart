@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:face_camera/face_camera.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_bloc.dart';
 import 'package:kurerefinancialplanner_app/screens/login_screen.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FaceCamera.initialize();
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AddTransactionBloc()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'The Kureres Financial Planner',
+      title: 'My Pesa Mate',
       theme: ThemeData(
         fontFamily: 'SFPro',
         scaffoldBackgroundColor: const Color(0xFFF9F9F9),

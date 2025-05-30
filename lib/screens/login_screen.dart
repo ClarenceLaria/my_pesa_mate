@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Welcome to the Kureres ❤',
+                  'Welcome to My Pesa Mate',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
