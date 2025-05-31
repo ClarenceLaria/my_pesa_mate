@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kurerefinancialplanner_app/apis/apis.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_event.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_state.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_event.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_state.dart';
 
 
 

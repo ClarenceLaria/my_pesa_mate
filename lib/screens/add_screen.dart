@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_bloc.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_event.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_state.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_event.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_state.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/transaction_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/transaction_event.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/transaction_state.dart';
 import 'package:kurerefinancialplanner_app/components/transactions_card.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -19,34 +22,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   DateTime selectedDate = DateTime.now();
   TextEditingController amountController = TextEditingController();
 
-  final List<Transaction> transactions = [
-    Transaction(
-        category: 'Salary',
-        amount: 100000,
-        date: DateTime.now(),
-        type: 'Income'),
-    Transaction(
-        category: 'Groceries',
-        amount: 15000,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-        type: 'Expense'),
-    Transaction(
-        category: 'Electricity Bill',
-        amount: 10000,
-        date: DateTime.now().subtract(const Duration(days: 2)),
-        type: 'Expense'),
-    Transaction(
-        category: 'Freelance Project',
-        amount: 25000,
-        date: DateTime.now().subtract(const Duration(days: 3)),
-        type: 'Income'),
-    Transaction(
-        category: 'Transport',
-        amount: 5000,
-        date: DateTime.now().subtract(const Duration(days: 4)),
-        type: 'Expense'),
-  ];
-
   Future<void> _pickDate() async {
     DateTime? date = await showDatePicker(
       context: context,
@@ -59,6 +34,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         selectedDate = date;
       });
     }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    // Load initial transactions when the screen is opened
+    context.read<TransactionBloc>().add(LoadTransactionsEvent());
   }
 
   @override
@@ -152,7 +134,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   height: 48,
                   child: BlocConsumer<AddTransactionBloc, AddTransactionState>(
                     listener: (context, state) {
-                      if(state is AddTransactionSuccessState){
+                      if (state is AddTransactionSuccessState) {
+                        // Dispatch an event to TransactionBloc
+                        context
+                            .read<TransactionBloc>()
+                            .add(LoadTransactionsEvent());
+
+                        // Show success snackbar
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(state.message),
@@ -160,7 +148,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
-                      } else if (state is AddTransactionFailureState){
+
+                        // Clear the form fields
+                        setState(() {
+                          selectedType = 'Income';
+                          selectedCategory = 'Food';
+                          amountController.clear();
+                          selectedDate = DateTime.now();
+                        });
+                      } else if (state is AddTransactionFailureState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(state.error),
@@ -173,16 +169,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     builder: (context, state) {
                       return ElevatedButton(
                         onPressed: state is AddTransactionLoadingState
-                          ? null : (){
-                            context.read<AddTransactionBloc>().add(
-                              CreateTransactionEvent(
-                                type: selectedType, 
-                                amount: double.tryParse(amountController.text) ?? 0.0, 
-                                category: selectedCategory, 
-                                txnDate: selectedDate,
-                              ),
-                            );
-                          },
+                            ? null
+                            : () {
+                                context.read<AddTransactionBloc>().add(
+                                      CreateTransactionEvent(
+                                        type: selectedType,
+                                        amount: double.tryParse(
+                                                amountController.text) ??
+                                            0.0,
+                                        category: selectedCategory,
+                                        txnDate: selectedDate,
+                                      ),
+                                    );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.greenAccent,
                           shape: RoundedRectangleBorder(
@@ -194,11 +193,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       );
-                    }, 
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
-                TransactionsCard(transactions: transactions),
+                BlocBuilder<TransactionBloc, TransactionState>(
+                    builder: (context, state) {
+                  if (state is TransactionLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is TransactionLoadedState) {
+                    return TransactionsCard(transactions: state.transactions);
+                  } else if (state is TransactionErrorState) {
+                    return Text('Error: ${state.error}');
+                  } else {
+                    return const SizedBox();
+                  }
+                }),
               ],
             ),
           ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:face_camera/face_camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kurerefinancialplanner_app/bloc/transaction/add_transaction_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_transaction/add_transaction_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/transaction/transaction_bloc.dart';
 import 'package:kurerefinancialplanner_app/screens/login_screen.dart';
 
 void main() async {
@@ -11,6 +12,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AddTransactionBloc()),
+        BlocProvider(create: (_) => TransactionBloc()),
       ],
       child: const MyApp(),
     ),

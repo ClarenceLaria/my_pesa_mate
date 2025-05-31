@@ -1,23 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kurerefinancialplanner_app/screens/transaction_screen.dart';
-
-class Transaction {
-  final String type;
-  final String category;
-  final double amount;
-  final DateTime date;
-
-  Transaction({
-    required this.type,
-    required this.category,
-    required this.amount,
-    required this.date,
-  });
-}
+import 'package:kurerefinancialplanner_app/models/transaction_model.dart';
 
 class TransactionsCard extends StatelessWidget {
-  final List<Transaction> transactions;
+  final List<FetchedTransaction> transactions;
 
   const TransactionsCard({super.key, required this.transactions});
 
@@ -84,7 +71,7 @@ class TransactionsCard extends StatelessWidget {
                   ),
                 ),
                 title: Text(tx.category, style: const TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: Text(formatDate(tx.date)),
+                subtitle: Text(formatDate(tx.createdAt)),
                 trailing: Text(
                   '${tx.type.toLowerCase() == 'income' ? '+' : '-'} KSh.${tx.amount.toStringAsFixed(0)}',
                   style: TextStyle(

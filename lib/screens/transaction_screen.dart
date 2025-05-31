@@ -1,19 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-class Transaction {
-  final String type;
-  final String category;
-  final double amount;
-  final DateTime date;
-
-  Transaction({
-    required this.type,
-    required this.category,
-    required this.amount,
-    required this.date,
-  });
-}
+import 'package:kurerefinancialplanner_app/models/transaction_model.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});

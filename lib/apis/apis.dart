@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:kurerefinancialplanner_app/models/transaction_model.dart';
 
 class APIService {
   static const String baseUrl = 'https://the-kureres-backend.onrender.com/api/';
@@ -64,6 +65,21 @@ class APIService {
       }
     }catch(e){
       return 'Failed to create transaction';
+    }
+  }
+
+  static Future<List<FetchedTransaction>> getTransactions() async {
+    try {
+      final response = await http.get(Uri.parse('${baseUrl}get-transactions'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((item) => FetchedTransaction.fromJson(item)).toList(); // cast to List<Map<String, dynamic>>
+      } else {
+        throw Exception('Failed to fetch transactions');
+      }
+    } catch (e) {
+      throw Exception('Error fetching transactions: $e');
     }
   }
 }
