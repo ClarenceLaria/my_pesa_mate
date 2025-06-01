@@ -204,7 +204,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   } else if (state is TransactionLoadedState) {
                     return TransactionsCard(transactions: state.transactions);
                   } else if (state is TransactionErrorState) {
-                    return Text('Error: ${state.error}');
+                    return Center(child: Text('Error: ${state.error}'));
                   } else {
                     return const SizedBox();
                   }

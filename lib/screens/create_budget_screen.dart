@@ -61,86 +61,90 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Budget')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Select Category', style: TextStyle(fontSize: 16)),
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                items: _categories
-                    .map(
-                        (cat) => DropdownMenuItem(value: cat, child: Text(cat)))
-                    .toList(),
-                onChanged: (value) => setState(() => _selectedCategory = value),
-                decoration: InputDecoration(
-                  hintText: 'Choose a category',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Select Category', style: TextStyle(fontSize: 16)),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCategory,
+                    items: _categories
+                        .map(
+                            (cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                        .toList(),
+                    onChanged: (value) => setState(() => _selectedCategory = value),
+                    decoration: InputDecoration(
+                      hintText: 'Choose a category',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                    ),
+                    validator: (value) =>
+                        value == null ? 'Please select a category' : null,
                   ),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                validator: (value) =>
-                    value == null ? 'Please select a category' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Budget Amount (KSh)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Budget Amount (KSh)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return 'Please enter amount';
+                      final n = num.tryParse(value);
+                      if (n == null || n <= 0) return 'Enter a valid number';
+                      return null;
+                    },
                   ),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Please enter amount';
-                  final n = num.tryParse(value);
-                  if (n == null || n <= 0) return 'Enter a valid number';
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              const Text('Start Date'),
-              GestureDetector(
-                onTap: _pickDate,
-                child: _customField(DateFormat.yMMMMd().format(selectedDate)),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              const Text('End Date'),
-              GestureDetector(
-                onTap: _pickDate,
-                child: _customField(DateFormat.yMMMMd().format(selectedDate)),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitBudget,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  const SizedBox(
+                    height: 16,
                   ),
-                  child: const Text(
-                    'Create Budget',
-                    style: TextStyle(color: Colors.white),
+                  const Text('Start Date'),
+                  GestureDetector(
+                    onTap: _pickDate,
+                    child: _customField(DateFormat.yMMMMd().format(selectedDate)),
                   ),
-                ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text('End Date'),
+                  GestureDetector(
+                    onTap: _pickDate,
+                    child: _customField(DateFormat.yMMMMd().format(selectedDate)),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _submitBudget,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.greenAccent,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text(
+                        'Create Budget',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
