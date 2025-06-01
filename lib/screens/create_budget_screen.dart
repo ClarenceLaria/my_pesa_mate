@@ -1,5 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_budget/add_budget_bloc.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_budget/add_budget_event.dart';
+import 'package:kurerefinancialplanner_app/bloc/add_budget/add_budget_state.dart';
+import 'package:kurerefinancialplanner_app/models/budget_model.dart';
 
 class CreateBudgetScreen extends StatefulWidget {
   const CreateBudgetScreen({super.key});
@@ -10,7 +15,8 @@ class CreateBudgetScreen extends StatefulWidget {
 
 class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   final TextEditingController _amountController = TextEditingController();
 
@@ -23,36 +29,30 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
     'Utilities'
   ];
 
-  void _submitBudget() {
-    if (_formKey.currentState!.validate()) {
-      final double amount = double.parse(_amountController.text);
-      final String category = _selectedCategory!;
-
-      // Save logic here (e.g., send to database, state management, etc.)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Budget for $category created: ₦${amount.toStringAsFixed(2)}')),
-      );
-
-      // Clear fields
-      _amountController.clear();
-      setState(() {
-        _selectedCategory = null;
-      });
-    }
-  }
-
-  Future<void> _pickDate() async {
+  Future<void> _pickStartDate() async {
     DateTime? date = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: startDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
     if (date != null) {
       setState(() {
-        selectedDate = date;
+        startDate = date;
+      });
+    }
+  }
+
+  Future<void> _pickEndDate() async {
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: endDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      setState(() {
+        endDate = date;
       });
     }
   }
@@ -116,30 +116,73 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                   ),
                   const Text('Start Date'),
                   GestureDetector(
-                    onTap: _pickDate,
-                    child: _customField(DateFormat.yMMMMd().format(selectedDate)),
+                    onTap: _pickStartDate,
+                    child: _customField(DateFormat.yMMMMd().format(startDate)),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   const Text('End Date'),
                   GestureDetector(
-                    onTap: _pickDate,
-                    child: _customField(DateFormat.yMMMMd().format(selectedDate)),
+                    onTap: _pickEndDate,
+                    child: _customField(DateFormat.yMMMMd().format(endDate)),
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submitBudget,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.greenAccent,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      child: const Text(
-                        'Create Budget',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    child: BlocConsumer<AddBudgetBloc, AddBudgetState>(
+                      listener: (context, state) {
+                        if (state is AddBudgetSuccessState) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.message),
+                              backgroundColor: Colors.green,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+
+                          setState(() {
+                            _amountController.clear();
+                            _selectedCategory = null;
+                            startDate = DateTime.now();
+                            endDate = DateTime.now();
+                          });
+                        } else if (state is AddBudgetFailureState) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.error),
+                              backgroundColor: Colors.red,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        return ElevatedButton(
+                          onPressed: state is AddBudgetLoadingState 
+                          ? null
+                          : () {
+                            context.read<AddBudgetBloc>().add(
+                              CreateBudgetEvent(
+                                budget: Budget(
+                                  category: _selectedCategory ?? '',
+                                  amount: double.tryParse(_amountController.text) ?? 0.0,
+                                  startDate: startDate,
+                                  endDate: endDate,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.greenAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'Create Budget',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

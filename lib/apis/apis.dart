@@ -38,10 +38,9 @@ class APIService {
   
   static Future<String> createBudget ({
     required String name,
-    required String amount,
-    required String startDate,
-    required String endDate,
-    required String userId,
+    required double amount,
+    required DateTime startDate,
+    required DateTime endDate,
   })async{
     try{
       final response = await http.post(
@@ -52,9 +51,8 @@ class APIService {
         body: jsonEncode({
           'name': name,
           'amount': amount,
-          'startDate': startDate,
-          'endDate': endDate,
-          'userId': userId,
+          'startDate': startDate.toIso8601String(),
+          'endDate': endDate.toIso8601String(),
         }),
       );
 
