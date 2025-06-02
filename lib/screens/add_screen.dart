@@ -104,6 +104,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           'Capital Gains',
                           'Food',
                           'Transport',
+                          'Entertainment',
                           'Rent',
                           'Health'
                         ]

@@ -25,8 +25,8 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
     'Food',
     'Transport',
     'Entertainment',
+    'Rent',
     'Health',
-    'Utilities'
   ];
 
   Future<void> _pickStartDate() async {
