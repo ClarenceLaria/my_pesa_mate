@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:kurerefinancialplanner_app/apis/apis.dart';
 import 'package:kurerefinancialplanner_app/components/budget_category.dart';
+import 'package:kurerefinancialplanner_app/skeleton/home_screen_skeleton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -60,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const Icon(Icons.chevron_left, color: Colors.black),
         title: const Text(
           'Dashboard',
           style: TextStyle(color: Colors.black),
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: SafeArea(
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(child: HomeScreenSkeleton())
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -115,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 const Spacer(),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
                                   child: SizedBox(
                                     height: 180,
                                     width: 180,
@@ -123,23 +124,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                       PieChartData(
                                         sections: [
                                           PieChartSectionData(
-                                            color: const Color.fromARGB(255, 103, 188, 152),
-                                            value: (incomeTotal - expenseTotal).toDouble().clamp(0, double.infinity),
+                                            color: const Color.fromARGB(
+                                                255, 103, 188, 152),
+                                            value: (incomeTotal - expenseTotal)
+                                                .toDouble()
+                                                .clamp(0, double.infinity),
                                             radius: 40,
                                             title: 'Balance',
                                             titleStyle: const TextStyle(
                                               fontSize: 14,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           ),
                                           PieChartSectionData(
-                                            color: const Color.fromARGB(255, 86, 226, 168),
+                                            color: const Color.fromARGB(
+                                                255, 86, 226, 168),
                                             value: expenseTotal.toDouble(),
                                             radius: 40,
                                             title: 'Spent',
                                             titleStyle: const TextStyle(
                                               fontSize: 14,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ],
@@ -159,7 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -175,7 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   category: ratio['name'] ?? '',
                                   amount: (ratio['budget'] ?? 0.0).toDouble(),
                                   percentageUsed: ratio['ratio'] != null
-                                      ? (ratio['ratio'] as num).toDouble().clamp(0.0, 1.0)
+                                      ? (ratio['ratio'] as num)
+                                          .toDouble()
+                                          .clamp(0.0, 1.0)
                                       : 0.0,
                                 ),
                               );
