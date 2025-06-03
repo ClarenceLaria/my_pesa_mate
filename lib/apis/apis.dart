@@ -80,4 +80,19 @@ class APIService {
       throw Exception('Error fetching transactions: $e');
     }
   }
+
+  static Future<Map<String, dynamic>> getTotals() async {
+    try {
+      final response = await http.get(Uri.parse('${baseUrl}get-totals'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to fetch totals');
+      }
+    } catch (e) {
+      throw Exception('Error fetching totals: $e');
+    }
+  }
 }
